@@ -22,13 +22,14 @@
 
 using namespace LAMMPS_NS;
 
+enum { CONSTANT, VARIABLE };
+
 /* ---------------------------------------------------------------------- */
 
-RegPlane::RegPlane(LAMMPS *lmp, int narg, char **arg) :
-    Region(lmp, narg, arg), xstr(nullptr), ystr(nullptr), zstr(nullptr)
+RegPlane::RegPlane(LAMMPS *lmp, int narg, char **arg) : Region(lmp, narg, arg),
+    xstr(nullptr), ystr(nullptr), zstr(nullptr), nxstr(nullptr),
+    nystr(nullptr), nzstr(nullptr)
 {
-  xvar = yvar = zvar = 0.0;
-
   options(narg - 8, &arg[8]);
 
   if (utils::strmatch(arg[2], "^v_")) {
@@ -61,14 +62,40 @@ RegPlane::RegPlane(LAMMPS *lmp, int narg, char **arg) :
     zstyle = CONSTANT;
   }
 
+  if (utils::strmatch(arg[5], "^v_")) {
+    nxstr = utils::strdup(arg[5] + 2);
+    normal[0] = 0.0;
+    nxstyle = VARIABLE;
+    varshape = 1;
+  } else {
+    normal[0] = xscale * utils::numeric(FLERR, arg[5], false, lmp);
+    nxstyle = CONSTANT;
+  }
+
+  if (utils::strmatch(arg[6], "^v_")) {
+    nystr = utils::strdup(arg[6] + 2);
+    normal[1] = 0.0;
+    nystyle = VARIABLE;
+    varshape = 1;
+  } else {
+    normal[1] = yscale * utils::numeric(FLERR, arg[6], false, lmp);
+    nystyle = CONSTANT;
+  }
+
+  if (utils::strmatch(arg[7], "^v_")) {
+    nzstr = utils::strdup(arg[7] + 2);
+    normal[2] = 0.0;
+    nzstyle = VARIABLE;
+    varshape = 1;
+  } else {
+    normal[2] = zscale * utils::numeric(FLERR, arg[7], false, lmp);
+    nzstyle = CONSTANT;
+  }
+
   if (varshape) {
     variable_check();
     RegPlane::shape_update();
   }
-
-  normal[0] = xscale * utils::numeric(FLERR, arg[5], false, lmp);
-  normal[1] = yscale * utils::numeric(FLERR, arg[6], false, lmp);
-  normal[2] = zscale * utils::numeric(FLERR, arg[7], false, lmp);
 
   // enforce unit normal
 
@@ -95,6 +122,9 @@ RegPlane::~RegPlane()
   delete[] xstr;
   delete[] ystr;
   delete[] zstr;
+  delete[] nxstr;
+  delete[] nystr;
+  delete[] nzstr;
   delete[] contact;
 }
 
@@ -174,6 +204,22 @@ void RegPlane::shape_update()
   if (ystyle == VARIABLE) yp = yscale * input->variable->compute_equal(yvar);
 
   if (zstyle == VARIABLE) zp = zscale * input->variable->compute_equal(zvar);
+
+  if (nxstyle == VARIABLE) normal[0] = xscale * input->variable->compute_equal(nxvar);
+
+  if (nystyle == VARIABLE) normal[1] = yscale * input->variable->compute_equal(nyvar);
+
+  if (nzstyle == VARIABLE) normal[2] = zscale * input->variable->compute_equal(nzvar);
+
+  // enforce unit normal
+
+  double rsq = normal[0] * normal[0] + normal[1] * normal[1] + normal[2] * normal[2];
+  if (rsq == 0.0)
+    error->all(FLERR, "Illegal region plane normal vector: {} {} {}", normal[0], normal[1],
+               normal[2]);
+  normal[0] /= sqrt(rsq);
+  normal[1] /= sqrt(rsq);
+  normal[2] /= sqrt(rsq);
 }
 
 /* ----------------------------------------------------------------------
@@ -201,5 +247,26 @@ void RegPlane::variable_check()
     if (zvar < 0) error->all(FLERR, "Variable {} for region plane does not exist", zstr);
     if (!input->variable->equalstyle(zvar))
       error->all(FLERR, "Variable {} for region plane is invalid style", zstr);
+  }
+
+  if (nxstyle == VARIABLE) {
+    nxvar = input->variable->find(nxstr);
+    if (nxvar < 0) error->all(FLERR, "Variable {} for region plane does not exist", nxstr);
+    if (!input->variable->equalstyle(nxvar))
+      error->all(FLERR, "Variable {} for region plane is invalid style", nxstr);
+  }
+
+  if (nystyle == VARIABLE) {
+    nyvar = input->variable->find(nystr);
+    if (nyvar < 0) error->all(FLERR, "Variable {} for region plane does not exist", nystr);
+    if (!input->variable->equalstyle(nyvar))
+      error->all(FLERR, "Variable {} for region plane is invalid style", nystr);
+  }
+
+  if (nzstyle == VARIABLE) {
+    nzvar = input->variable->find(nzstr);
+    if (nzvar < 0) error->all(FLERR, "Variable {} for region plane does not exist", nzstr);
+    if (!input->variable->equalstyle(nzvar))
+      error->all(FLERR, "Variable {} for region plane is invalid style", nzstr);
   }
 }
