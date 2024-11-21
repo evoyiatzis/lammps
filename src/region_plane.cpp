@@ -214,6 +214,8 @@ void RegPlane::shape_update()
 
   if (nzstyle == VARIABLE) normal[2] = zscale * input->variable->compute_equal(nzvar);
 
+  if ((nxstyle == CONSTANT) && (nystyle == CONSTANT) && (nzstyle == CONSTANT)) return;
+
   // enforce unit normal
 
   double rsq = normal[0] * normal[0] + normal[1] * normal[1] + normal[2] * normal[2];
