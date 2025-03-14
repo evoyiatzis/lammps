@@ -49,7 +49,6 @@ using namespace LAMMPS_NS;
 using namespace FixConst;
 
 static constexpr double CONV_TO_EV = 14.4;
-static constexpr double SMALL = 1.0e-14;
 static constexpr double QSUMSMALL = 0.00001;
 static constexpr double ANGSTROM_TO_BOHRRADIUS = 1.8897261259;
 
@@ -224,6 +223,7 @@ void FixQtpieReaxFF::pertype_parameters(char *arg)
                                    std::to_string(exp));
         gauss_exp[itype] = exp;
       }
+      fclose(fp);
     } catch (std::exception &e) {
       error->one(FLERR,e.what());
     }
@@ -1101,7 +1101,6 @@ void FixQtpieReaxFF::calc_chi_eff()
   memset(&chi_eff[0],0,atom->nmax*sizeof(double));
 
   const auto x = (const double * const *)atom->x;
-  const int ntypes = atom->ntypes;
   const int *type = atom->type;
 
   double dist,overlap,sum_n,sum_d,expa,expb,chia,chib,phia,phib,p,m;

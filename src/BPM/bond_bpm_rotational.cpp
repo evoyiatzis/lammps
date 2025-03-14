@@ -11,6 +11,10 @@
    See the README file in the top-level LAMMPS directory.
 ------------------------------------------------------------------------- */
 
+/* ----------------------------------------------------------------------
+   Contributing author: Joel Clemmer (SNL)
+------------------------------------------------------------------------- */
+
 #include "bond_bpm_rotational.h"
 
 #include "atom.h"
@@ -154,7 +158,7 @@ void BondBPMRotational::store_data()
       type = bond_type[i][m];
 
       //Skip if bond was turned off
-      if (type < 0) continue;
+      if (type <= 0) continue;
 
       // map to find index n for tag
       j = atom->map(atom->bond_atom[i][m]);
@@ -523,7 +527,7 @@ void BondBPMRotational::compute(int eflag, int vflag)
     breaking = elastic_forces(i1, i2, type, r_mag, r0_mag, r_mag_inv, rhat, r, r0, force1on2,
                               torque1on2, torque2on1);
 
-    if (breaking >= 1.0) {
+    if ((breaking >= 1.0) && break_flag) {
       bondlist[n][2] = 0;
       process_broken(i1, i2);
       continue;
@@ -684,6 +688,9 @@ void BondBPMRotational::settings(int narg, char **arg)
       error->all(FLERR, "Illegal bond bpm command, invalid argument {}", arg[iarg]);
     }
   }
+
+  if (smooth_flag && !break_flag)
+    error->all(FLERR, "Illegal bond bpm command, must turn off smoothing with break no option");
 }
 
 /* ----------------------------------------------------------------------
@@ -772,7 +779,6 @@ void BondBPMRotational::read_restart_settings(FILE *fp)
 
 double BondBPMRotational::single(int type, double rsq, int i, int j, double &fforce)
 {
-  // Not yet enabled
   if (type <= 0) return 0.0;
 
   int flipped = 0;

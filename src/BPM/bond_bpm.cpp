@@ -11,6 +11,10 @@
    See the README file in the top-level LAMMPS directory.
 ------------------------------------------------------------------------- */
 
+/* ----------------------------------------------------------------------
+   Contributing author: Joel Clemmer (SNL)
+------------------------------------------------------------------------- */
+
 #include "bond_bpm.h"
 
 #include "atom.h"
@@ -377,8 +381,13 @@ double BondBPM::equilibrium_distance(int /*i*/)
     r0_max_estimate = temp;
   }
 
-  // Divide out heuristic prefactor added in comm class
-  return max_stretch * r0_max_estimate / 1.5;
+  double dist = r0_max_estimate;
+
+  // Add stretch and remove heuristic prefactor (added in comm class)
+  if (break_flag)
+    dist *= max_stretch / 1.5;
+
+  return dist;
 }
 
 /* ----------------------------------------------------------------------
