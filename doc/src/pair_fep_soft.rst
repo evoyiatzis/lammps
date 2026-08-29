@@ -13,6 +13,7 @@
 .. index:: pair_style lj/charmm/coul/long/soft/omp
 .. index:: pair_style lj/class2/soft
 .. index:: pair_style lj/class2/soft/omp
+.. index:: pair_style lj/class2/soft/gapsys
 .. index:: pair_style lj/class2/coul/cut/soft
 .. index:: pair_style lj/class2/coul/cut/soft/omp
 .. index:: pair_style lj/class2/coul/long/soft
@@ -61,6 +62,9 @@ pair_style lj/class2/soft command
 
 Accelerator Variants: *lj/class2/soft/omp*
 
+pair_style lj/class2/soft/gapsys command
+========================================
+
 pair_style lj/class2/coul/cut/soft command
 ==========================================
 
@@ -103,7 +107,7 @@ Syntax
 
    pair_style style args
 
-* style = *lj/cut/soft* or *lj/cut/soft/gapsys* or *lj/cut/coul/cut/soft* or *lj/cut/coul/long/soft* or *lj/cut/tip4p/long/soft* or *lj/charmm/coul/long/soft* or *lj/class2/soft* or *lj/class2/coul/cut/soft* or *lj/class2/coul/long/soft* or *coul/cut/soft* or *coul/cut/soft/gapsys* or *coul/long/soft* or *tip4p/long/soft* or *morse/soft*
+* style = *lj/cut/soft* or *lj/cut/soft/gapsys* or *lj/cut/coul/cut/soft* or *lj/cut/coul/long/soft* or *lj/cut/tip4p/long/soft* or *lj/charmm/coul/long/soft* or *lj/class2/soft* or *lj/class2/soft/gapsys* or *lj/class2/coul/cut/soft* or *lj/class2/coul/long/soft* or *coul/cut/soft* or *coul/cut/soft/gapsys* or *coul/long/soft* or *tip4p/long/soft* or *morse/soft*
 * args = list of arguments for a particular style
 
 .. parsed-literal::
@@ -135,6 +139,9 @@ Syntax
        cutoff = global cutoff for Coulombic (optional, outer is Coulombic cutoff if only 5 args)
      *lj/class2/soft* args = n alpha_lj cutoff
        n, alpha_LJ = parameters of soft-core potential
+       cutoff = global cutoff for Lennard-Jones interactions (distance units)
+     *lj/class2/soft/gapsys* args = alpha_lj cutoff
+       alpha_LJ = parameter of soft-core potential
        cutoff = global cutoff for Lennard-Jones interactions (distance units)
      *lj/class2/coul/cut/soft* args = n alpha_LJ alpha_C cutoff (cutoff2)
        n, alpha_LJ, alpha_C = parameters of soft-core potential
@@ -204,6 +211,9 @@ Examples
    pair_style lj/charmm/coul/long 2.0 0.5 10.0 8.0 10.0 9.0
    pair_coeff * * 0.28 3.1 1.0
    pair_coeff 1 1 0.28 3.1 1.0 0.14 3.1
+
+   pair_style lj/class2/soft/gapsys 1.0 9.5
+   pair_coeff * * 0.28 3.1 1.0
 
    pair_style lj/class2/coul/long/soft 2.0 0.5 10.0 9.5
    pair_style lj/class2/coul/long/soft 2.0 0.5 10.0 9.5 9.5
@@ -486,6 +496,17 @@ For distances shorter than :math:`r_{inner}`, the energy is computed by
    c_1 = 26 \sigma^12 / r_{inner}^14 - 7 \sigma^6 / r_{inner}^8
    c_2 = 7 \sigma^12 / r_{inner}^13 - 2 \sigma^6 / r_{inner}^7
    c_3 = 13 \sigma^12 / r_{inner}^12 - 4 \sigma^6 / r_{inner}^6
+
+This pair style requires the following pair coefficients:
+
+* :math:`\alpha_lj` (distance units, positive real number)
+* :math:`\lambda` (unitless, between 0.0 and 1.0)
+* cutoff (distance units)
+
+.. versionadded:: TBD
+The pair style *lj/class2/soft/gapsys* implements a soft-core version of the 9-6 potential in
+:doc:`pair_style lj/class2 <pair_class2>` following the notion of a linear force for short
+distances as proposed by Gapsys et al :ref:`(Gapsys) <Gapsys>`.
 
 This pair style requires the following pair coefficients:
 
