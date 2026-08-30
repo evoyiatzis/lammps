@@ -53,7 +53,7 @@ PairLJClass2SoftGapsys::~PairLJClass2SoftGapsys()
     memory->destroy(cut);
     memory->destroy(epsilon);
     memory->destroy(sigma);
-    memory->destroy(lambda)
+    memory->destroy(lambda);
     memory->destroy(lj1);
     memory->destroy(lj2);
     memory->destroy(lj3);
@@ -188,7 +188,7 @@ void PairLJClass2SoftGapsys::allocate()
   memory->create(cut, np1, np1, "pair:cut");
   memory->create(epsilon, np1, np1, "pair:epsilon");
   memory->create(sigma, np1, np1, "pair:sigma");
-  memory->create(lambda, np1, np1, "pair:lambda")
+  memory->create(lambda, np1, np1, "pair:lambda");
   memory->create(lj1, np1, np1, "pair:lj1");
   memory->create(lj2, np1, np1, "pair:lj2");
   memory->create(lj3, np1, np1, "pair:lj3");
