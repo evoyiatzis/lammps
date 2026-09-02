@@ -504,6 +504,7 @@ This pair style requires the following pair coefficients:
 * cutoff (distance units)
 
 .. versionadded:: TBD
+
 The pair style *lj/class2/soft/gapsys* implements a soft-core version of the 9-6 potential in
 :doc:`pair_style lj/class2 <pair_class2>` following the notion of a linear force for short
 distances as proposed by Gapsys et al :ref:`(Gapsys) <Gapsys>`.

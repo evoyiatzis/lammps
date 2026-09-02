@@ -33,7 +33,7 @@ using namespace MathConst;
 
 PairLJClass2SoftGapsys::PairLJClass2SoftGapsys(LAMMPS *lmp) :
     Pair(lmp), cut(nullptr), epsilon(nullptr), sigma(nullptr), lj1(nullptr), lj2(nullptr),
-    lj3(nullptr), lj4(nullptr), offset(nullptr)
+    lj3(nullptr), lj4(nullptr), lambda(nullptr), offset(nullptr)
 {
   writedata = 1;
   allocated = 0;
@@ -205,7 +205,7 @@ void PairLJClass2SoftGapsys::settings(int narg, char **arg)
   if (narg != 2) error->all(FLERR, "Illegal pair_style command");
 
   alphalj = utils::numeric(FLERR, arg[0], false, lmp);
-  if (alphalj < 0.0)
+  if (not (alphalj > 0.0))
     error->all(FLERR, "Pair style lj/class2/soft/gapsys requires alphalj > 0");
   cut_global = utils::numeric(FLERR, arg[1], false, lmp);
 
@@ -239,7 +239,7 @@ void PairLJClass2SoftGapsys::coeff(int narg, char **arg)
   if (sigma_one <= 0.0 || epsilon_one <= 0.0)
     error->all(FLERR,"Incorrect args for pair coefficients" + utils::errorurl(21));
   if (lambda_one < 0.0 || lambda_one > 1.0)
-    error->all(FLERR, "Pair style lj/class2/soft/gapsys requires 0 < lambda < 1");
+    error->all(FLERR, "Pair style lj/class2/soft/gapsys requires 0 <= lambda <= 1");
 
   double cut_one = cut_global;
   if (narg == 6) cut_one = utils::numeric(FLERR, arg[5], false, lmp);
