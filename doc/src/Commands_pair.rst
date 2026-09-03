@@ -153,6 +153,7 @@ parenthesis: g = GPU, i = INTEL, k = KOKKOS, o = OPENMP, t = OPT.
    * :doc:`lj/class2 (gko) <pair_class2>`
    * :doc:`lj/class2/coul/cut (ko) <pair_class2>`
    * :doc:`lj/class2/coul/cut/soft (o) <pair_fep_soft>`
+   * :doc:`lj/class2/coul/cut/soft/gapsys <pair_fep_soft>`
    * :doc:`lj/class2/coul/long (gko) <pair_class2>`
    * :doc:`lj/class2/coul/long/cs (o) <pair_cs>`
    * :doc:`lj/class2/coul/long/soft (o) <pair_fep_soft>`

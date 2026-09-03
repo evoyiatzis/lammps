@@ -246,6 +246,7 @@ accelerated styles exist.
 * :doc:`lj/class2 <pair_class2>` - COMPASS (class 2) force field without Coulomb
 * :doc:`lj/class2/coul/cut <pair_class2>` - COMPASS with cutoff Coulomb
 * :doc:`lj/class2/coul/cut/soft <pair_fep_soft>` - COMPASS with cutoff Coulomb with a soft core
+* :doc:`lj/class2/coul/cut/soft/gapsys <pair_fep_soft>` - COMPASS (class 2) force field with short-range Coulomb and a soft core with continuous force and first derivative of force
 * :doc:`lj/class2/coul/long <pair_class2>` - COMPASS with long-range Coulomb
 * :doc:`lj/class2/coul/long/cs <pair_cs>` - COMPASS with long-range Coulomb with core/shell adjustments
 * :doc:`lj/class2/coul/long/soft <pair_fep_soft>` - COMPASS with long-range Coulomb with a soft core

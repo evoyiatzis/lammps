@@ -60,6 +60,8 @@ action pair_lj_class2_soft.cpp
 action pair_lj_class2_soft.h
 action pair_lj_class2_soft_gapsys.cpp
 action pair_lj_class2_soft_gapsys.h
+action pair_lj_class2_coul_cut_soft_gapsys.cpp
+action pair_lj_class2_coul_cut_soft_gapsys.h
 action pair_lj_class2_coul_cut_soft.cpp
 action pair_lj_class2_coul_cut_soft.h
 action pair_lj_class2_coul_long_soft.cpp  pppm.cpp
