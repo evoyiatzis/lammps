@@ -127,7 +127,7 @@ void PairLJClass2CoulCutSoftGapsys::compute(int eflag, int vflag)
 
         if (rsq < cut_inner_q * cut_inner_q) {
           forcecoul = factor_coul * qqrd2e * qtmp * q[j];
-          forcecoul *= rsq * (- 2.0 / pow(cut_inner, 3) + 3.0 / (pow(cut_inner, 2) * sqrt(rsq)));
+          forcecoul *= rsq * (- 2.0 / pow(cut_inner_q, 3) + 3.0 / (pow(cut_inner_q, 2) * sqrt(rsq)));
         } else if (rsq < cut_coulsq[itype][jtype]) {
           forcecoul = qqrd2e * qtmp * q[j] * sqrt(r2inv);
         } else {
@@ -507,7 +507,7 @@ void PairLJClass2CoulCutSoftGapsys::write_data_all(FILE *fp)
 {
   for (int i = 1; i <= atom->ntypes; i++)
     for (int j = i; j <= atom->ntypes; j++)
-      fprintf(fp, "%d %d %g %g %g %g\n", i, j, epsilon[i][j], sigma[i][j], lambda[i][j], cut[i][j]);
+      fprintf(fp, "%d %d %g %g %g %g\n", i, j, epsilon[i][j], sigma[i][j], lambda[i][j], cut_lj[i][j]);
 }
 
 /* ---------------------------------------------------------------------- */
